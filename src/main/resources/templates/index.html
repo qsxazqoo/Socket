@@ -45,7 +45,7 @@
     var tt = $("#tt").text();
     var status = $("#status").text();
     $("#send").click(function () {
-        if (status == "") {
+        if (status != "") {
             $("#forms").submit();
         } else if (tt != "") {
             $("#forms").submit();
@@ -56,7 +56,10 @@
     $("#connect").click(function(){
         if(status==""){
             $("#formcon").submit();
-        }else{
+        }else if(status=="無法連線到主機"){
+            alert("請確認連線");
+        }
+        else{
             alert("已連線中");
         }
     })

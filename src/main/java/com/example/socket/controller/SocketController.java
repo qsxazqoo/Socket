@@ -33,6 +33,9 @@ public class SocketController extends HttpServlet {
 
     @PostMapping("/connect")
     public String connect(Model model, HttpSession session) throws UnknownHostException {
+        if(session.getAttribute("status")=="無法連線到主機"){
+            return "redirect:/";
+        }
         minaSocket.connect(session);
         return "index";
     }
@@ -45,7 +48,7 @@ public class SocketController extends HttpServlet {
 
     @PostMapping("/send")
     public String send(@RequestParam(value = "io", required = false) String io, Model model, HttpSession session) throws Exception {
-        if (session.getAttribute("status") != null && !io.isEmpty()) {
+        if (session.getAttribute("status") != null && !io.isEmpty() && session.getAttribute("status")!="無法連線到主機") {
             logger.info("傳送: "+io);
             String recevied=minaSocket.send(io,session);
             session.setAttribute("display", recevied);
@@ -60,7 +63,7 @@ public class SocketController extends HttpServlet {
 
     @PostMapping("/transaction")
     public String transaction(@RequestParam(value = "transaction", required = false) String transaction, Model model, HttpSession session) throws Exception {
-        if (session.getAttribute("status") != null) {
+        if (session.getAttribute("status") != null && session.getAttribute("status")!="無法連線到主機") {
                 session.setAttribute("transaction", transaction);
                 minaSocket.transaction(transaction);
                 logger.info("交易代碼 : "+transaction);
